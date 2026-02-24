@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPP Tender / Bid Production Pipeline — Real-World Model</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; background: #f8f9fa; color: #333; margin: 0; padding: 0; }
+        h1 { text-align: center; color: #1a1a1a; border-bottom: 4px solid #006064; padding: 25px 20px; margin: 0; background: white; }
+        .container { display: flex; max-width: 1600px; margin: 30px auto; gap: 40px; padding: 0 20px; }
+        .sidebar { width: 290px; position: sticky; top: 30px; align-self: flex-start; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); height: fit-content; overflow-y: auto; max-height: calc(100vh - 100px); }
+        .sidebar h2 { margin-top: 0; color: #006064; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar a { color: #006064; text-decoration: none; display: block; padding: 8px 0; font-weight: 500; }
+        .sidebar a:hover { color: #00838f; }
+        .main-content { flex: 1; min-width: 0; }
+        .metadata { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; margin-bottom: 30px; }
+        .legend { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .legend-item { font-size: 1.1em; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .chart-section { background: white; padding: 30px; border-radius: 14px; box-shadow: 0 6px 30px rgba(0,0,0,0.12); margin-bottom: 40px; }
+        .mermaid-container { overflow: auto; padding: 25px; background: #fafafa; border-radius: 10px; border: 1px solid #eee; }
+        button { background: #006064; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        button:hover { background: #00838f; }
+    </style>
+</head>
+<body>
+
+<h1>PPP Tender / Bid Production Pipeline — Real-World Model</h1>
+
+<div class="container">
+
+    <!-- STICKY LEFT TOC -->
+    <aside class="sidebar">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">High-Level Overview</a></li>
+            <li><a href="#ph1">Phase 1 – Opportunity Screening & Bid/No-Bid</a></li>
+            <li><a href="#ph2">Phase 2 – Bid Mobilization & Strategy</a></li>
+            <li><a href="#ph3">Phase 3 – Technical Workstream</a></li>
+            <li><a href="#ph4">Phase 4 – Financial Workstream</a></li>
+            <li><a href="#ph5">Phase 5 – Legal Workstream</a></li>
+            <li><a href="#ph6">Phase 6 – Commercial Workstream</a></li>
+            <li><a href="#ph7">Phase 7 – Pink Team Review</a></li>
+            <li><a href="#ph8">Phase 8 – Integration & Assembly</a></li>
+            <li><a href="#ph9">Phase 9 – Red Team Review</a></li>
+            <li><a href="#ph10">Phase 10 – Approval & Submission</a></li>
+            <li><a href="#ex">Subprocess – Exception Handling</a></li>
+            <li><a href="#fm">Subprocess – Force Majeure</a></li>
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <div class="metadata">
+            <strong>10 Phases + 2 Subprocesses | 99 Tasks | 10 Decision Gates</strong><br>
+            LLM-Augmented Bid Production • v1.0 — February 2026
+        </div>
+
+        <h2>Legend — LLM Capability</h2>
+        <div class="legend">
+            <div class="legend-item" style="color:#155724;">🟢 Green  = Fully LLM-Capable</div>
+            <div class="legend-item" style="color:#856404;">🟡 Yellow = Hybrid (LLM drafts + human review)</div>
+            <div class="legend-item" style="color:#721C24;">🔴 Red    = Human-Only</div>
+            <div class="legend-item" style="color:#5D3A8C;">🟣 Purple = Decision Gate</div>
+        </div>
+
+        <!-- HIGH-LEVEL OVERVIEW -->
+        <div class="chart-section" id="overview">
+            <h2>High-Level Overview</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    START(["START"]) --> PH1["Phase 1: Screening & Bid/No-Bid"]
+    PH1 --> PH2["Phase 2: Mobilization & Strategy"]
+    PH2 --> FORK["Fork → 4 Parallel Workstreams"]
+    FORK --> T["Phase 3: Technical"]
+    FORK --> F["Phase 4: Financial"]
+    FORK --> L["Phase 5: Legal"]
+    FORK --> C["Phase 6: Commercial"]
+    T & F & L & C --> MERGE["Merge at Pink Team"]
+    MERGE --> PH7["Phase 7: Pink Team"] --> PH8["Phase 8: Integration"] --> PH9["Phase 9: Red Team"] --> PH10["Phase 10: Approval & Submission"]
+    PH10 --> END(["BID SUBMITTED"])
+    style FORK fill:#E0BBE4,stroke:#5D3A8C
+    style MERGE fill:#E0BBE4,stroke:#5D3A8C
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 1 -->
+        <div class="chart-section" id="ph1">
+            <h2>Phase 1 – Opportunity Screening & Bid/No-Bid</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    classDef terminal fill:#B0BEC5,stroke:#37474F,stroke-width:2px,color:#37474F,font-weight:bold
+    START_BID(["START — PPP Tender/Bid Production Pipeline"]):::terminal
+    subgraph PH1 ["PHASE 1: OPPORTUNITY SCREENING & BID/NO-BID"]
+        OS_01_02["OS-01→02: Receive RFP<br/>& Initial Scan"]:::llm_green
+        J_OS_1((" ")) 
+        OS_03["OS-03: Strategic Fit<br/>Assessment"]:::hybrid_yellow
+        OS_04["OS-04: Capacity &<br/>Resource Check"]:::hybrid_yellow
+        OS_05["OS-05: Preliminary<br/>Risk Screen"]:::hybrid_yellow
+        J_OS_2((" ")) 
+        OS_06["OS-06: Bid Cost<br/>Estimate"]:::hybrid_yellow
+        OS_07["OS-07: Bid/No-Bid<br/>Recommendation"]:::hybrid_yellow
+        OS_D1{"OS-D1: Bid<br/>or Archive?"}:::decision_gate
+        OS_01_02 --> J_OS_1 --> OS_03 & OS_04 & OS_05 --> J_OS_2 --> OS_06 --> OS_07 --> OS_D1
+    end
+    START_BID --> OS_01_02
+    END_ARCHIVE(["END — Opportunity Archived"]):::terminal
+    OS_D1 -- NO BID --> END_ARCHIVE
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 2 -->
+        <div class="chart-section" id="ph2">
+            <h2>Phase 2 – Bid Mobilization & Strategy</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    START_BID(["From Phase 1"]) 
+    subgraph PH2 ["PHASE 2: BID MOBILIZATION & STRATEGY"]
+        BM_01["BM-01: Assemble Core Bid Team"]:::human_red
+        BM_02_03["BM-02→03: Deep RFP Analysis & Compliance Matrix"]:::llm_green
+        BM_04_06["BM-04→06: Clarification Q&A Cycle"]:::hybrid_yellow
+        BM_07["BM-07: Competitive Intelligence"]:::hybrid_yellow
+        BM_08["BM-08: Bid Strategy & Win Themes"]:::hybrid_yellow
+        BM_09_10["BM-09→10: Bid Schedule, Kick-Off & Assignments"]:::human_red
+        BM_11["BM-11: Internal Document Readiness Audit"]:::llm_green
+        BM_12["BM-12: Confirm Readiness & Gap Closure"]:::llm_green
+        BM_13["BM-13: Version Control & Audit Trail"]:::llm_green
+        BM_01 --> BM_02_03 --> BM_04_06 & BM_07 --> BM_08 --> BM_09_10 --> BM_11 --> BM_12 --> BM_13
+    end
+    START_BID --> BM_01
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 3 - TECHNICAL -->
+        <div class="chart-section" id="ph3">
+            <h2>Phase 3 – Technical Workstream</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    START_TW(["From Fork → Technical"]):::terminal
+    subgraph PH3 ["PHASE 3: TECHNICAL WORKSTREAM"]
+        TW_01["TW-01: Extract Output Specs & Technical Requirements"]:::llm_green
+        TW_D1{"TW-D1: Design-Build Scope?"}:::decision_gate
+        TW_02["TW-02: Detailed Design Concept & Drawings"]:::hybrid_yellow
+        TW_D1S["TW-D1S: Skip — Reference Design Only"]:::llm_green
+        J_TW_1((" ")) 
+        TW_03_04["TW-03→04: Construction Method & Programme"]:::hybrid_yellow
+        TW_05["TW-05: O&M Strategy & Lifecycle Plan"]:::hybrid_yellow
+        TW_D2{"TW-D2: ESIA Required?"}:::decision_gate
+        TW_06["TW-06: Environmental & Social Impact Assessment"]:::hybrid_yellow
+        TW_D2S["TW-D2S: Skip — Standard Compliance"]:::llm_green
+        J_TW_2((" ")) 
+        TW_07_08["TW-07→08: Social, H&S & Quality Plans"]:::hybrid_yellow
+        TW_09_10["TW-09→10: Key Personnel & Draft Technical Volume"]:::human_red
+        START_TW --> TW_01 --> TW_D1
+        TW_D1 -- YES --> TW_02 --> J_TW_1
+        TW_D1 -- NO --> TW_D1S --> J_TW_1
+        J_TW_1 --> TW_03_04 --> TW_05 --> TW_D2
+        TW_D2 -- YES --> TW_06 --> J_TW_2
+        TW_D2 -- NO --> TW_D2S --> J_TW_2
+        J_TW_2 --> TW_07_08 --> TW_09_10
+    end
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 4 - FINANCIAL -->
+        <div class="chart-section" id="ph4">
+            <h2>Phase 4 – Financial Workstream</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    START_FW(["From Fork → Financial"]):::terminal
+    subgraph PH4 ["PHASE 4: FINANCIAL WORKSTREAM"]
+        FW_01["FW-01: Extract Financial Requirements"]:::llm_green
+        FW_02["FW-02: Develop CAPEX & OPEX Estimates"]:::hybrid_yellow
+        FW_D1{"FW-D1: Demand or Availability Payment?"}:::decision_gate
+        FW_03["FW-03: Build Demand-Based Revenue Model"]:::hybrid_yellow
+        FW_D1A["FW-D1A: Build Availability-Based Model"]:::hybrid_yellow
+        J_FW_1((" ")) 
+        FW_04_05["FW-04→05: Populate Model, Revenue & Funding"]:::hybrid_yellow
+        FW_06_07["FW-06→07: Sensitivity Analysis & Returns"]:::hybrid_yellow
+        FW_08["FW-08: Insurance, Bonds & Guarantees"]:::hybrid_yellow
+        FW_09_10["FW-09→10: Compliance Check & Draft Financial Volume"]:::human_red
+        START_FW --> FW_01 --> FW_02 --> FW_D1
+        FW_D1 -- DEMAND --> FW_03 --> J_FW_1
+        FW_D1 -- AVAILABILITY --> FW_D1A --> J_FW_1
+        J_FW_1 --> FW_04_05 --> FW_06_07 --> FW_08 --> FW_09_10
+    end
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 5 - LEGAL -->
+        <div class="chart-section" id="ph5">
+            <h2>Phase 5 – Legal Workstream</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    START_LW(["From Fork → Legal"]):::terminal
+    subgraph PH5 ["PHASE 5: LEGAL WORKSTREAM"]
+        LW_01_02["LW-01→02: Review Concession & Qualifications"]:::llm_green
+        LW_03_05["LW-03→05: Risk Allocation, Regulatory & Subcontracting"]:::hybrid_yellow
+        LW_D1{"LW-D1: JV / Consortium?"}:::decision_gate
+        LW_06["LW-06: JV / Consortium Agreement"]:::human_red
+        LW_D1S["LW-D1S: Skip — Single Entity"]:::llm_green
+        J_LW_1((" ")) 
+        LW_07_08["LW-07→08: Government Interface & Draft Legal Volume"]:::hybrid_yellow
+        START_LW --> LW_01_02 --> LW_03_05 --> LW_D1
+        LW_D1 -- YES --> LW_06 --> J_LW_1
+        LW_D1 -- NO --> LW_D1S --> J_LW_1
+        J_LW_1 --> LW_07_08
+    end
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 6 - COMMERCIAL -->
+        <div class="chart-section" id="ph6">
+            <h2>Phase 6 – Commercial Workstream</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    START_CW(["From Fork → Commercial"]):::terminal
+    subgraph PH6 ["PHASE 6: COMMERCIAL WORKSTREAM"]
+        CW_01["CW-01: Evaluation Criteria Deep-Dive & Scoring"]:::llm_green
+        CW_02_03["CW-02→03: Service Level Design & KPI Framework"]:::hybrid_yellow
+        CW_04_05["CW-04→05: Stakeholder Plan & Value Proposition"]:::hybrid_yellow
+        CW_06_07["CW-06→07: Local Content & Innovation Proposals"]:::hybrid_yellow
+        CW_08["CW-08: Draft Commercial Volume"]:::human_red
+        START_CW --> CW_01 --> CW_02_03 --> CW_04_05 --> CW_06_07 --> CW_08
+    end
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 7 - PINK TEAM -->
+        <div class="chart-section" id="ph7">
+            <h2>Phase 7 – Pink Team Review</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    J_MERGE(["From All Workstreams"]) 
+    subgraph PH7 ["PHASE 7: PINK TEAM REVIEW"]
+        PT_01["PT-01: Assemble Pink Team Panel"]:::human_red
+        PT_02_04["PT-02→04: Compliance Review & Report"]:::llm_green
+        PT_D1{"PT-D1: Pink Team Pass?"}:::decision_gate
+        PT_05_06["PT-05→06: Resolve Findings & Verify"]:::hybrid_yellow
+        PT_01 --> PT_02_04 --> PT_D1
+        PT_D1 -- REWORK --> PT_05_06
+    end
+    J_MERGE --> PT_01
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 8 -->
+        <div class="chart-section" id="ph8">
+            <h2>Phase 8 – Integration & Assembly</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    J_PT(["From Pink Team"]) 
+    subgraph PH8 ["PHASE 8: INTEGRATION & ASSEMBLY"]
+        IA_01_02["IA-01→02: Merge All Volumes & Executive Summary"]:::human_red
+        IA_03_05["IA-03→05: Compliance Matrix & Appendices"]:::llm_green
+        IA_06_08["IA-06→08: Editorial, Formatting & Complete Package"]:::hybrid_yellow
+        IA_01_02 --> IA_03_05 --> IA_06_08
+    end
+    J_PT --> IA_01_02
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 9 -->
+        <div class="chart-section" id="ph9">
+            <h2>Phase 9 – Red Team Review</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    IA(["From Integration"]) 
+    subgraph PH9 ["PHASE 9: RED TEAM REVIEW"]
+        RT_01["RT-01: Assemble Red Team Panel"]:::human_red
+        RT_02_04["RT-02→04: Score vs Criteria & Gap Analysis"]:::hybrid_yellow
+        RT_D1{"RT-D1: Red Team Pass?"}:::decision_gate
+        RT_05_06["RT-05→06: Resolve Findings & Verify"]:::hybrid_yellow
+        RT_01 --> RT_02_04 --> RT_D1
+        RT_D1 -- REWORK --> RT_05_06
+    end
+    IA --> RT_01
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- PHASE 10 -->
+        <div class="chart-section" id="ph10">
+            <h2>Phase 10 – Approval & Submission</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    classDef llm_green fill:#D4EDDA,stroke:#155724,stroke-width:2px,color:#155724,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    RT(["From Red Team"]) 
+    subgraph PH10 ["PHASE 10: APPROVAL & SUBMISSION"]
+        AS_01["AS-01: Management Review Presentation"]:::human_red
+        AS_D1{"AS-D1: Management Approved?"}:::decision_gate
+        AS_PF["AS-PF: Submission Pre-Flight Checklist"]:::llm_green
+        AS_02_03["AS-02→03: Final Production & Electronic Package"]:::human_red
+        AS_04_05["AS-04→05: Physical Submission & Confirmation"]:::human_red
+        AS_01 --> AS_D1
+        AS_D1 -- APPROVE --> AS_PF --> AS_02_03 --> AS_04_05
+    end
+    RT --> AS_01
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- EXCEPTION -->
+        <div class="chart-section" id="ex">
+            <h2>Subprocess – Exception Handling</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef hybrid_yellow fill:#FFF3CD,stroke:#856404,stroke-width:2px,color:#856404,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    subgraph PH_EX ["SUBPROCESS: EXCEPTION HANDLING"]
+        EX_01["EX-01: Log Exception & Assess Impact"]:::hybrid_yellow
+        EX_D1{"EX-D1: Exception Severity?"}:::decision_gate
+        EX_02["EX-02: Resolve Exception & Update Deliverables"]:::hybrid_yellow
+        EX_01 --> EX_D1
+        EX_D1 --> EX_02
+    end
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+        <!-- FORCE MAJEURE -->
+        <div class="chart-section" id="fm">
+            <h2>Subprocess – Force Majeure</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'defaultRenderer': 'elk'}}}%%
+flowchart TD
+    classDef human_red fill:#F8D7DA,stroke:#721C24,stroke-width:2px,color:#721C24,font-weight:bold
+    classDef decision_gate fill:#E0BBE4,stroke:#5D3A8C,stroke-width:3px,color:#5D3A8C,font-weight:bold
+    subgraph PH_FM ["SUBPROCESS: FORCE MAJEURE"]
+        FM_01["FM-01: Assess External Shock Event"]:::human_red
+        FM_D1{"FM-D1: Continue, Pause, or Withdraw?"}:::decision_gate
+        FM_01 --> FM_D1
+    end
+                </div>
+            </div>
+            <button onclick="copyCode(this)">📋 Copy Mermaid Code</button>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    mermaid.initialize({ startOnLoad: true, flowchart: { defaultRenderer: 'elk', useMaxWidth: false } });
+    function copyCode(btn) {
+        const mermaidDiv = btn.parentElement.querySelector('.mermaid');
+        const code = mermaidDiv.textContent.trim();
+        navigator.clipboard.writeText(code).then(() => {
+            const original = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => btn.textContent = original, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
