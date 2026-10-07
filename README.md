@@ -1,12 +1,12 @@
-# PPP Tender and Bid Production Pipeline
+# PPP Bid Preparation Process, Bidder Side (v2.1)
 
 Live map at https://mindtensorml.github.io/ppp-bid-pipeline/
 
-This map takes a public-private partnership bid from opportunity screening to financial close in 11 phases, 121 tasks and 13 decision gates. It is based on the APMG PPP Certification Guide.
+A bidder-side PPP tender process mapped against the APMG PPP Certification Guide (ADB, EBRD, IDB, IsDB and WBG, 2016). The guide is written for the procuring authority. This map is the bidder's mirror of it, from the first pipeline signal to financial close and the handover to delivery.
 
-- Technical, financial, legal and commercial workstreams run in parallel and merge at a pink team review.
-- A red team review comes before approval and submission.
-- Separate subprocesses cover exceptions and force majeure.
-- Each task is tagged for what a model can do alone, what needs human review, and what stays with people.
+- 14 phases and 4 subprocesses, with 114 tasks, 17 decision gates and 7 authority parameters.
+- Each phase names the procuring authority step it answers. Each task cites the guide section and page it rests on, or is marked as bidder practice.
+- Every task and gate has a named owner. 37 tasks are human-only, 74 are drafted by a model and signed by the owner, and 3 are run by a model with the owner accountable.
+- Authority parameters, such as the tender route and revenue regime, are read from the tender documents and never chosen by the bidder.
 
-Built by Caesar Rana, CFA, at SpaceXAI and shared with permission. The map describes a general method and contains no client data. See all the maps at https://mindtensorml.github.io/
+Built by Caesar Rana, CFA, APMG Certified PPP Professional (CP3P), at SpaceXAI and shared with permission. The map describes a general method and contains no client data. Comments from PPP practitioners are welcome. See all the maps at https://mindtensorml.github.io/
